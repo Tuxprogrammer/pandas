@@ -31,13 +31,21 @@ def is_platform_mac():
 
 
 min_numpy_ver = '1.12.0'
+max_numpy_ver = ''
+
+numpy_install_rule = 'numpy >= {numpy_ver}'.format(numpy_ver=min_numpy_ver)
+
+if (sys.version_info < (3, 0)):
+    max_numpy_ver = '1.16.4'
+    numpy_install_rule += ', <= {numpy_ver}'.format(numpy_ver=max_numpy_ver)
+
 setuptools_kwargs = {
     'install_requires': [
         'python-dateutil >= 2.5.0',
         'pytz >= 2011k',
-        'numpy >= {numpy_ver}'.format(numpy_ver=min_numpy_ver),
+        numpy_install_rule,
     ],
-    'setup_requires': ['numpy >= {numpy_ver}'.format(numpy_ver=min_numpy_ver)],
+    'setup_requires': [numpy_install_rule],
     'zip_safe': False,
 }
 
@@ -727,9 +735,9 @@ extensions.append(_move_ext)
 # The build cache system does string matching below this point.
 # if you change something, be careful.
 
-setup(name=DISTNAME,
+setup(name='pandas27',
       maintainer=AUTHOR,
-      version=versioneer.get_version(),
+      version='0.24.3',
       packages=find_packages(include=['pandas', 'pandas.*']),
       package_data={'': ['templates/*', '_libs/*.dll']},
       ext_modules=maybe_cythonize(extensions, compiler_directives=directives),
